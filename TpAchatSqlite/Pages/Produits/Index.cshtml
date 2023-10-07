@@ -1,0 +1,62 @@
+﻿@page
+@model TpAchatSqlite.Pages.Produits.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<form class="form-inline">
+    <div class="form-group mx-2">
+        <label for="nom" class="sr-only">Nom du produit :</label>
+        <input type="text" id="nom" asp-for="nom" class="form-control" placeholder="Nom du produit" />
+    </div>
+    <div class="form-group mx-2">
+        <label for="marque" class="sr-only">Marque du produit :</label>
+        <input type="text" id="marque" asp-for="marque" class="form-control" placeholder="Marque du produit" />
+    </div>
+    <div class="form-group mx-2">
+        <label for="prix_min" class="sr-only">Prix minimum :</label>
+        <input type="number" id="prix_min" asp-for="prix_min" class="form-control" placeholder="Prix minimum" />
+    </div>
+    <div class="form-group mx-2">
+        <label for="prix_max" class="sr-only">Prix maximum :</label>
+        <input type="number" id="prix_max" asp-for="prix_max" class="form-control" placeholder="Prix maximum" />
+    </div>
+    <input type="submit" class="btn btn-primary mx-2" value="rechercher"/>
+    <a asp-page="Create" class=" btn btn-success ml-2 float-right">Ajouter </a>
+
+</form>
+<br/>
+
+<div>
+</div><br/>
+
+
+
+
+<div class="row">
+    @foreach (var item in Model.Produit)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="@item.Images" class="card-img-top" alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.NomProduit)</h5>
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </p>
+                    <p>Marque: @Html.DisplayFor(modelItem => item.Marque)</p>
+                    <p>Prix: @Html.DisplayFor(modelItem => item.Prix)</p>
+                    <p>Stock: @Html.DisplayFor(modelItem => item.Stock)</p>
+                    <a asp-page="./Edit" asp-route-id="@item.IDProduit">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.IDProduit">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.IDProduit">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+                
