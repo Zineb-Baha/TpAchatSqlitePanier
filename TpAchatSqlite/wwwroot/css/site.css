@@ -25,3 +25,19 @@ body {
     position: inherit;
     line-height:50px;
 }
+
+.btn-success, .btn-primary {
+    color: #fff;
+    background-color: #2270a5!important;
+    border-color: #2270a5!important;
+}
+.ajoupanierinp {
+    max-width: 70px!important;
+}
+.stotal {
+
+    font-weight: 700!important;
+    font-size: x-large!important;
+
+}
+

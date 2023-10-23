@@ -22,7 +22,7 @@ namespace TpAchatSqlite.Pages.Produits
         [BindProperty(SupportsGet = true)]
         public string nom { get; set; } = string.Empty;
         [BindProperty(SupportsGet = true)]
-        public string marque { get; set; }
+        public string marque { get; set; } = string.Empty;
         [BindProperty(SupportsGet = true)]
         public double prix_min { get; set; } 
         [BindProperty(SupportsGet = true)]
@@ -49,5 +49,7 @@ namespace TpAchatSqlite.Pages.Produits
             Produit = await produits.ToListAsync();
 
         }
+
+    
     }
 }

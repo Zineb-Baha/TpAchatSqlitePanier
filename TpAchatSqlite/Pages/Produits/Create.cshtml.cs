@@ -30,7 +30,7 @@ namespace TpAchatSqlite.Pages.Produits
         [BindProperty]
         public Produit Produit { get; set; } = default!;
         [BindProperty]
-        public IFormFile Pic { get; set; }
+        public IFormFile? Pic { get; set; } 
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD

@@ -1,0 +1,113 @@
+﻿@page
+@model TpAchatSqlite.Pages.Produits.PanierModel
+@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+<div class="row" id="panierContainer">
+    
+</div>
+
+
+@section Scripts {
+    <script>
+     
+        // Récupérer les données du panier
+        var panier = getPanierData();
+        var totalpanier = 0;
+        // Générer le contenu HTML à partir des données du panier
+        var htmlContent = '<div class="row">';
+
+        for (var produitId in panier) {
+            var produit = panier[produitId];
+            var totalproduit = 0;
+
+            htmlContent += '<div class="col-md-4 mb-4">';
+            htmlContent += '<div class="card h-100">';
+
+            htmlContent += '<img src="' + produit.Images + '" class="card-img-top" alt="Image du produit">';
+            htmlContent += '<div class="card-body">';
+            htmlContent += '<h5 class="card-title">' + produit.NomProduit + '</h5>';
+            htmlContent += '<p class="card-text">' + produit.Description + '</p>';
+            htmlContent += '<p class="card-text">Prix par unite : ' + produit.Prix + '</p>';
+            htmlContent += '<p class="card-text">Marque : ' + produit.Marque + '</p>';
+            htmlContent += '<p class="card-text">Quantité : ' + produit.Quantite + '</p>';
+            totalproduit = produit.Prix * produit.Quantite;
+            htmlContent += '<p class="card-text">Prix totale : ' + totalproduit + '</p>';
+
+            htmlContent += '</div>';
+
+            htmlContent += '</div>';
+            htmlContent += '</div>';
+            totalpanier += produit.Prix * produit.Quantite;
+
+
+        }
+        htmlContent += '<p>Total du panier:' + totalpanier + '</p>';
+        // Créez un élément "div" pour la card
+        var cardElement = document.createElement('div');
+        cardElement.classList.add('card');
+
+        // Créez un élément "div" pour le contenu de la card
+        var cardContentElement = document.createElement('div');
+        cardContentElement.classList.add('card-body');
+
+        // Ajoutez le contenu HTML à l'élément du contenu de la card
+        cardContentElement.innerHTML = '<p>Total du panier: </p><span class="stotal">' + totalpanier + ' DH</span>';
+
+        // Ajoutez l'élément du contenu de la card à l'élément de la card
+        cardElement.appendChild(cardContentElement);
+
+        // Ajoutez la card à un conteneur existant (par exemple, un élément ayant l'ID "container")
+        var container = document.getElementById('container');
+        container.appendChild(cardElement);
+
+        htmlContent += '</div>'; // Fermer la rangée Bootstrap
+
+        var panierContainer = document.getElementById('panierContainer');
+        if (panierContainer) {
+            panierContainer.innerHTML = htmlContent;
+        }
+
+
+
+
+
+        // Dans votre JavaScript
+        function getPanierData() {
+            // Récupérer les données du panier depuis le local storage
+            var panierData = localStorage.getItem('panier');
+            return panierData ? JSON.parse(panierData) : {};  // Renvoie un objet JSON vide si le panier est vide
+        }
+
+    </script>
+}
+<div id="container">
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <style>
+    .card-body {
+        text-align: center;
+        -webkit-box-flex: 1;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 1.25rem;
+    }
+        </style>

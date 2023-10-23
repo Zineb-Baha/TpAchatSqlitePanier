@@ -5,6 +5,7 @@
     ViewData["Title"] = "Index";
 }
 
+
 <form class="form-inline">
     <div class="form-group mx-2">
         <label for="nom" class="sr-only">Nom du produit :</label>
@@ -28,35 +29,105 @@
 </form>
 <br/>
 
-<div>
-</div><br/>
+
 
 
 
 
 <div class="row">
-    @foreach (var item in Model.Produit)
+    @if (Model.Produit != null)
     {
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <img src="@item.Images" class="card-img-top" alt="Card image cap" />
-                <div class="card-body">
-                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.NomProduit)</h5>
-                    <p class="card-text">
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </p>
-                    <p>Marque: @Html.DisplayFor(modelItem => item.Marque)</p>
-                    <p>Prix: @Html.DisplayFor(modelItem => item.Prix)</p>
-                    <p>Stock: @Html.DisplayFor(modelItem => item.Stock)</p>
-                    <a asp-page="./Edit" asp-route-id="@item.IDProduit">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.IDProduit">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.IDProduit">Delete</a>
+        @foreach (var item in Model.Produit)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <form method="post" asp-page-handler="AjouterAuPanier" asp-route-id="@item.IDProduit" class="form-inline">
+
+                        <img src="@item.Images" id="imag-@item.IDProduit" class="card-img-top" alt="Card image cap" />
+                    <div class="card-body">
+                            <h5 class="card-title"><span id="nomp-@item.IDProduit">@Html.DisplayFor(modelItem => item.NomProduit)</span></h5>
+                            <p class="card-text" id="description-@item.IDProduit">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </p>
+                        Marque: <p id="marque-@item.IDProduit">@Html.DisplayFor(modelItem => item.Marque)</p>
+                        Prix:<p id="prix-@item.IDProduit"> @Html.DisplayFor(modelItem => item.Prix)</p>
+                        <p>Stock: @Html.DisplayFor(modelItem => item.Stock)</p>
+                        <a asp-page="./Edit" asp-route-id="@item.IDProduit">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.IDProduit">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.IDProduit">Delete</a>
+                        <!--<div class="text-center mt-2">
+                                <div class="form-group">
+                                    <label for="quantite-@item.IDProduit" class="sr-only">Quantite:</label>
+                                    <input type="number" id="quantite-@item.IDProduit" name="quantite" class="form-control" value="1" min="1" />
+                                    <button type="button" onclick="ajouterAuPanier(@item.IDProduit)" class="btn btn-success btn-sm ml-2">Ajouter au panier</button>
+
+                                    </div>
+
+                            </div>-->
+                        <div class="text-center mt-2">
+                             <div class="form-group">
+                                 <label for="quantite-@item.IDProduit" class="sr-only">Quantite:</label>
+                                 <input type="number" id="quantite-@item.IDProduit" name="quantite" class="form-control ajoupanierinp" value="1" min="1" />
+                                 <button type="button" onclick="ajouterAuPanier(@item.IDProduit)" class="btn btn-success btn-sm ml-2">Ajouter au panier</button></div></div>
+
+                    </div>
+                    </form>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>
 
 
 
-                
+
+@section Scripts {
+    <script>
+function ajouterAuPanier(idProduit) {
+    // Récupérer la quantité saisie par l'utilisateur
+    var quantite = parseInt(document.getElementById('quantite-' + idProduit).value);
+
+    // Récupérer les informations du produit depuis la page
+    var produit = {
+        IDProduit: idProduit,
+        NomProduit: document.getElementById('nomp-' + idProduit).textContent,
+        Description: document.getElementById('description-' + idProduit).textContent,
+        Prix: parseFloat(document.getElementById('prix-' + idProduit).textContent),
+        //Stock: parseInt(document.getElementById('stock-' + idProduit).value),
+        Marque: document.getElementById('marque-' + idProduit).textContent,
+        Images: document.getElementById('imag-' + idProduit).src,
+        Quantite: quantite
+    };
+
+    // Vérifier si la quantité est valide (supérieure à 0)
+    if (quantite > 0) {
+        // Récupérer le panier actuel depuis le stockage local
+        var panier = JSON.parse(localStorage.getItem('panier')) || {};
+
+        // Vérifier si le produit est déjà dans le panier
+        if (panier.hasOwnProperty(idProduit)) {
+            // Si le produit est déjà dans le panier, ajouter la quantité sélectionnée
+            panier[idProduit].Quantite += quantite;
+        } else {
+            // Si le produit n'est pas encore dans le panier, l'ajouter avec toutes les informations du produit
+            panier[idProduit] = produit;
+        }
+
+        // Stocker le panier mis à jour dans le stockage local
+        localStorage.setItem('panier', JSON.stringify(panier));
+
+        // Afficher un message de succès
+        alert('Produit ajouté au panier.');
+
+        // Vous pouvez également mettre à jour l'affichage du panier si nécessaire
+    } else {
+        alert('Veuillez saisir une quantité valide (supérieure à 0).');
+    }
+            // Après avoir ajouté le produit au panier avec succès
+            // Mise à jour de la quantité affichée dans le panier
+            var quantiteDansPanier = parseInt(document.getElementById('nombreProduitsPanier').textContent);
+            document.getElementById('nombreProduitsPanier').textContent = quantiteDansPanier + quantite;
+
+}
+</script>
+}
